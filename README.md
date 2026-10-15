@@ -7,9 +7,12 @@ street categories, set against the Seine, major parks, and the city's
 administrative outline. A second mode, the Daily Challenge, turns the
 same map into a connect-the-dots puzzle between two Paris landmarks.
 
+**Play it live:** https://vadimlimousin.github.io/rues-de-paris/
+
 ## Play
 
-Just open `index.html` in a browser — double-click it, or:
+No need to download anything — just open the live link above. To run it
+locally instead, open `index.html` in a browser — double-click it, or:
 
 ```
 open index.html
@@ -21,8 +24,13 @@ back to system fonts otherwise).
 
 ## Sharing with someone else
 
-For sending to someone else, use the single-file bundle instead of the
-raw project folder:
+Easiest: just send the live link — https://vadimlimousin.github.io/rues-de-paris/
+Being a real `https://` URL, it sidesteps every local-file quirk below
+entirely (Windows zip previews, Android Chrome's restrictions on local
+sibling files, etc.) — it just works like any other website.
+
+For offline sharing (no internet needed to play), use the single-file
+bundle instead of the raw project folder:
 
 ```
 python3 scripts/bundle_standalone.py
