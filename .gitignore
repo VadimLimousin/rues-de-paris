@@ -1,0 +1,25 @@
+# Build pipeline cache — regenerable raw API responses (tens of MB), not needed
+# to play the game or to re-run the pipeline (it repopulates automatically).
+scripts/cache/
+
+# Build pipeline logs, if left around during development
+scripts/*.log
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.pyc
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+# Leftover local zip from manual sharing — redundant with the repo itself.
+/R2P.zip

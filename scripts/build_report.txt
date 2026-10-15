@@ -1,0 +1,131 @@
+=== Stage 1: Wikipedia street titles per arrondissement ===
+WARNING: expected 20 arrondissement subcategories, found 21
+Raw titles across 20 arrondissements: 6943
+Eponymous-category recursions (famous streets filed under their own category): 29
+Dropped as non-street (no type-word prefix / index page): 377
+Cleaned + deduped candidate streets: 6060
+
+=== Stage 1c: bridges ===
+Bridge candidates: 27 (dropped 4 non-bridge pages)
+
+=== Stage 2: OpenStreetMap geometry (one bounded query) ===
+Using cached OSM response.
+
+=== Stage 1b: landmark supplement (Wikipedia categorization gap) ===
+Added: 7
+Already present (no-op): 74
+
+=== Stage 1c: bridges (not filed under any arrondissement) ===
+Added: 15
+Already present (no-op): 4
+Not found in OSM data (skipped): ['Pont Amont', "Viaduc d'Austerlitz", "Viaduc d'Auteuil", 'Pont Aval', 'Pont Barbier', 'Pont de Grammont', 'Pont Saint-Charles', 'Pont Rouelle']
+
+=== Matching candidate streets to OSM ways ===
+Matched: 5820 / 6082
+Unmatched (dropped): 262
+Normalized-key OSM collisions merged: 9
+Sample unmatched: Terrasse Lautréamont, Voie A/1, Rue de l'Arc-en-Ciel, Rue des Bons-Vivants, Rue de la Boucle, Rue Brève, Place Carrée, Rue du Cinéma, Rue de l'Équerre-d'Argent, Rue Martha-Graham, Rue des Négociants, Rue de l'Oculus, Rue de l'Orient-Express, Rue des Piliers, Rue Pirouette, Rue Poquelin, Passage de la Réale, Place de la Rotonde, Passage des Verrières, Galerie d'Orléans
+
+=== Stage 2b: spatial sanity check on merged street geometry ===
+  'Rue Étienne-Marcel': kept 6/8 segments (chosen by matching arrondissement 1, not by point count), dropped 4 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Gutenberg': kept 5/6 segments (chosen by matching arrondissement 1, not by point count), dropped 9 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue de la Lingerie': kept 4/5 segments (chosen by matching arrondissement 1, not by point count), dropped 4 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Cour de Rome': kept 7/11 segments (chosen by matching arrondissement 3, not by point count), dropped 34 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Place de la République': kept 18/19 segments (chosen by matching arrondissement 3, not by point count), dropped 3 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Béranger': kept 1/2 segments (chosen by matching arrondissement 3, not by point count), dropped 4 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue des Écoles': kept 4/5 segments (chosen by matching arrondissement 5, not by point count), dropped 2 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Cour de Rohan': kept 3/4 segments (chosen by matching arrondissement 6, not by point count), dropped 40 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Danton': kept 3/4 segments (chosen by matching arrondissement 6, not by point count), dropped 3 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Guynemer': kept 18/19 segments (chosen by matching arrondissement 6, not by point count), dropped 6 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue de La Motte-Picquet': kept 7/12 segments (chosen by matching arrondissement 7, not by point count), dropped 30 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Chaptal': kept 2/3 segments (chosen by matching arrondissement 9, not by point count), dropped 5 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue de Verdun': kept 9/15 segments (chosen by matching arrondissement 10, not by point count), dropped 29 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Eugène-Varlin': kept 5/6 segments (chosen by matching arrondissement 10, not by point count), dropped 4 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue du 8-Mai-1945': kept 22/26 segments (chosen by matching arrondissement 10, not by point count), dropped 15 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue de la République': kept 81/85 segments (chosen by matching arrondissement 11, not by point count), dropped 16 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Cour Saint-Joseph': kept 3/4 segments (chosen by matching arrondissement 11, not by point count), dropped 6 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Cour Saint-Louis': kept 3/10 segments (chosen by matching arrondissement 11, not by point count), dropped 40 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue du Chemin-Vert': kept 12/15 segments (chosen by matching arrondissement 11, not by point count), dropped 7 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Paul-Bert': kept 1/2 segments (chosen by matching arrondissement 11, not by point count), dropped 13 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Quai de la Rapée': kept 94/95 segments (chosen by matching arrondissement 12, not by point count), dropped 2 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue de Gravelle': kept 27/52 segments (chosen by matching arrondissement 12, not by point count), dropped 160 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue des Minimes': kept 16/17 segments (chosen by matching arrondissement 12, not by point count), dropped 6 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue des Tilleuls': kept 1/4 segments (chosen by matching arrondissement 12, not by point count), dropped 24 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Traversière': kept 16/17 segments (chosen by matching arrondissement 12, not by point count), dropped 7 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Jeanne-d'Arc': kept 25/28 segments (chosen by matching arrondissement 13, not by point count), dropped 10 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue David-Weill': kept 1/5 segments (chosen by matching arrondissement 14, not by point count), dropped 10 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue du Général-Leclerc': kept 44/51 segments (chosen by matching arrondissement 14, not by point count), dropped 40 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue du Château': kept 10/11 segments (chosen by matching arrondissement 14, not by point count), dropped 14 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue du Commandant-René-Mouchotte': kept 17/18 segments (chosen by matching arrondissement 14, not by point count), dropped 12 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Jules-Guesde': kept 1/2 segments (chosen by matching arrondissement 14, not by point count), dropped 6 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Chauvelot': kept 1/2 segments (chosen by matching arrondissement 15, not by point count), dropped 3 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue de l'Église': kept 2/3 segments (chosen by matching arrondissement 15, not by point count), dropped 5 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Ernest-Renan': kept 2/4 segments (chosen by matching arrondissement 15, not by point count), dropped 9 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Allée du Bord-de-l'Eau': kept 33/36 segments (chosen by matching arrondissement 16, not by point count), dropped 17 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Allée des Fortifications': kept 18/19 segments (chosen by matching arrondissement 16, not by point count), dropped 8 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue de Saint-Cloud': kept 19/33 segments (chosen by matching arrondissement 16, not by point count), dropped 46 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue Alphand': kept 2/8 segments (chosen by matching arrondissement 16, not by point count), dropped 37 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue de Montmorency': kept 1/3 segments (chosen by matching arrondissement 16, not by point count), dropped 7 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue des Peupliers': kept 1/2 segments (chosen by matching arrondissement 16, not by point count), dropped 9 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue Victor-Hugo': kept 9/12 segments (chosen by matching arrondissement 16, not by point count), dropped 10 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue de l'Amiral-Courbet': kept 1/2 segments (chosen by matching arrondissement 16, not by point count), dropped 5 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Michel-Ange': kept 11/12 segments (chosen by matching arrondissement 16, not by point count), dropped 2 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue de la Tour': kept 5/6 segments (chosen by matching arrondissement 16, not by point count), dropped 2 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue de la Chapelle': kept 1/2 segments (chosen by matching arrondissement 17, not by point count), dropped 20 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue du Débarcadère': kept 1/2 segments (chosen by matching arrondissement 17, not by point count), dropped 11 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue Rachel': kept 1/2 segments (chosen by matching arrondissement 18, not by point count), dropped 2 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Avenue Jean-Jaurès': kept 66/68 segments (chosen by matching arrondissement 19, not by point count), dropped 20 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+  'Rue Jacques-Prévert': kept 1/2 segments (chosen by matching arrondissement 20, not by point count), dropped 2 points across implausible fragment(s) (likely an unrelated OSM feature sharing the same name)
+Streets with implausible fragments removed: 49
+
+=== Stage 1e: new landmark points (Daily Challenge places pool) ===
+Landmark points resolved: 6/6
+
+=== Stage 1d: Paris administrative boundary (outline) ===
+Boundary outer ring segments: 88 -> assembled into 1 closed ring(s)
+
+=== Stage 1d: Seine / water features ===
+Water elements: 528 (each clipped to Paris's real shape — e.g. the Seine's own relations run for hundreds of km beyond the city)
+
+=== Stage 1d: major parks ===
+Parks kept (top 25 by area): 25
+
+=== Stage 3: fame scoring (Wikipedia langlinks + backlinks) ===
+  fame-scored 500/5826
+  fame-scored 1000/5826
+  fame-scored 1500/5826
+  fame-scored 2000/5826
+  fame-scored 2500/5826
+  fame-scored 3000/5826
+  fame-scored 3500/5826
+  fame-scored 4000/5826
+  fame-scored 4500/5826
+  fame-scored 5000/5826
+  fame-scored 5500/5826
+Fame scoring done in 0.4s
+
+Tier cutoffs: tier1<= 50, tier2<= 200, tier3<= 600, tier4 = rest (5226)
+Sample tier 1 (most famous): Tour Eiffel, Avenue des Champs-Élysées, Cité de Londres, Cimetière du Père-Lachaise, Place de la Concorde, Place Saint-Pierre, Place Vendôme, Pont Neuf, Place Charles-de-Gaulle, Place des Vosges, Rue de Rivoli, Place de la Bastille, Parc des Buttes-Chaumont, Rue du Faubourg-Saint-Honoré, Boulevard Haussmann
+
+=== Stage 4: projection, keys, collisions ===
+coreKey collisions detected (marked ambiguous, require full name to match): 564 groups
+
+=== Stage 5: street-adjacency graph (Daily Challenge connectivity) ===
+Adjacency from shared coordinates: 5826 nodes, 12086 edges
+  Connected landmark 'parc-des-buttes-chaumont' to nearest streets: avenue-de-la-cascade, rue-botzaris, rue-hassard
+  Connected landmark 'bibliotheque-nationale-de-france-francois-mitterrand' to nearest streets: quai-francois-mauriac, avenue-de-france, rue-alphonse-boudard
+  Connected landmark 'cimetiere-du-pere-lachaise' to nearest streets: rue-lespagnol, avenue-gambetta, rue-desiree
+  Connected landmark 'tour-eiffel' to nearest streets: avenue-gustave-eiffel, avenue-pierre-loti, avenue-anatole-france
+  Connected landmark 'gare-de-lyon' to nearest streets: place-louis-armand, rue-de-bercy, boulevard-diderot
+  Connected landmark 'square-des-batignolles' to nearest streets: place-charles-fillion, rue-brochant, rue-de-rome
+
+=== Stage 6: known-places pool (Daily Challenge) ===
+Places resolved: 20/20
+
+Final street count: 5826
+  tier 1: 50 streets
+  tier 2: 150 streets
+  tier 3: 400 streets
+  tier 4: 5226 streets
+
+Wrote /Users/vadimlimousin/R2P/scripts/../data/paris_streets.js (4093 KB)

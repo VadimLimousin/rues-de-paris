@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rues de Paris</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="app-header">
+  <div class="title-block">
+    <h1>Rues de Paris</h1>
+    <p class="subtitle">Tapez les noms des rues pour les colorer sur la carte.</p>
+  </div>
+  <div class="controls">
+    <label class="field" id="tierField">
+      <span>Difficulté</span>
+      <select id="tierSelect">
+        <option value="1">Monuments</option>
+        <option value="2" selected>Connues</option>
+        <option value="3">Averties</option>
+        <option value="4">Carte complète</option>
+      </select>
+    </label>
+    <div class="stat" id="counterStat">
+      <span class="stat-label">Trouvées</span>
+      <span class="stat-value" id="counter">0 / 0</span>
+    </div>
+    <div class="stat" id="challengeTimerStat" hidden>
+      <span class="stat-label">Temps</span>
+      <span class="stat-value" id="challengeTimer">00:00</span>
+    </div>
+    <button id="challengeBtn" class="btn-secondary">Défi du jour</button>
+    <button id="giveupBtn" class="btn-secondary">Abandonner</button>
+  </div>
+</header>
+
+<main id="app-main">
+  <div id="map-column">
+    <div id="map-wrap">
+      <svg id="map" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="challengeMapOptions" class="map-overlay" hidden>
+        <label class="toggle-field">
+          <input type="checkbox" id="showAllStreetsToggle">
+          <span>Afficher toutes les rues</span>
+        </label>
+      </div>
+      <div id="zoomControls" class="map-overlay">
+        <button id="zoomInBtn" class="zoom-btn" title="Zoomer" aria-label="Zoomer">+</button>
+        <button id="zoomOutBtn" class="zoom-btn" title="Dézoomer" aria-label="Dézoomer">−</button>
+        <button id="resetViewBtn" class="zoom-btn zoom-btn-reset" title="Réinitialiser la vue" aria-label="Réinitialiser la vue">⤢</button>
+      </div>
+    </div>
+    <div id="districtGrid" aria-live="polite"></div>
+  </div>
+
+  <aside id="sidebar">
+    <input id="guessInput" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+           placeholder="Nom d'une rue…" autofocus>
+    <div id="foundList" aria-live="polite"></div>
+  </aside>
+
+  <aside id="challenge-sidebar" hidden>
+    <div class="route-header">
+      <div class="route-place"><span class="swatch" id="routeSwatchA"></span><span id="routePlaceA"></span></div>
+      <div class="route-arrow">→</div>
+      <div class="route-place"><span class="swatch" id="routeSwatchB"></span><span id="routePlaceB"></span></div>
+    </div>
+    <div id="challengeStatus" hidden></div>
+    <input id="challengeInput" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+           placeholder="Nom d'une rue…">
+    <div id="challengeFoundList" aria-live="polite"></div>
+  </aside>
+</main>
+
+<footer id="attribution">
+  Données : noms de rues — French Wikipedia (CC BY-SA) · Géométrie — © OpenStreetMap contributors (ODbL)
+</footer>
+
+<div id="endPanel" hidden>
+  <div id="endCard">
+    <h2 id="endTitle"></h2>
+    <p id="endSubtitle"></p>
+    <div id="missedList"></div>
+    <button id="closeEndBtn" class="btn-secondary">Fermer</button>
+  </div>
+</div>
+
+<div id="confettiLayer" aria-hidden="true"></div>
+
+<script src="data/paris_streets.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

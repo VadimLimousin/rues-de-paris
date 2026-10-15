@@ -1,0 +1,595 @@
+:root {
+  color-scheme: light;
+  --bg: #f2f5f4;
+  --surface: #ffffff;
+  --text: #142019;
+  --muted: #5b6b64;
+  --accent: #1f8f6d;
+  --accent-soft: #dbf0e7;
+  --border: #dfe6e2;
+  --unfound-stroke: #c7cfca;
+  --revealed-stroke: #b0433b;
+  --input-bg: #ffffff;
+  --shake-bg: #fbe4e1;
+  --cell-empty: #8a938d;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* Deliberately a single, always-light theme — no dark mode. */
+
+* { box-sizing: border-box; }
+
+/* The `hidden` attribute must always win over a component's own
+   `display` rule (flex/grid/etc.), or a toggled-off element still
+   renders and blocks clicks. */
+[hidden] {
+  display: none !important;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- header ---------- */
+
+#app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.title-block h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.field select {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-secondary {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+#challengeBtn.solved {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+#challengeBtn.solved:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+#tierSelect option.won {
+  color: var(--muted);
+}
+
+/* ---------- main layout ---------- */
+
+#app-main {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  padding: 16px 24px;
+  gap: 16px;
+}
+
+#map-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+#map-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+#map-wrap.dragging #map {
+  cursor: grabbing;
+}
+#map-wrap.dragging {
+  user-select: none;
+}
+
+.map-overlay {
+  position: absolute;
+  z-index: 2;
+}
+
+#zoomControls {
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#challengeMapOptions {
+  left: 12px;
+  top: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.toggle-field {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.zoom-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.zoom-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.zoom-btn-reset {
+  font-size: 14px;
+}
+
+.map-park {
+  fill: #cfe3c6;
+  fill-rule: evenodd;
+  stroke: none;
+  pointer-events: none;
+}
+
+.map-water {
+  fill: #bcd9ea;
+  fill-rule: evenodd;
+  stroke: none;
+  pointer-events: none;
+}
+
+.map-boundary {
+  fill: none;
+  stroke: #1a1f1c;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.street {
+  fill: none;
+  stroke: var(--unfound-stroke);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.4s ease, stroke-width 0.4s ease;
+}
+
+.street.found {
+  stroke-width: 2.6;
+}
+
+.street.revealed {
+  stroke: var(--revealed-stroke);
+  stroke-width: 1.8;
+  stroke-dasharray: 3 3;
+}
+
+.street.found-route {
+  stroke-width: 3.2;
+}
+
+.place-marker {
+  transition: r 0.12s ease-out;
+}
+
+.place-marker-label {
+  transition: opacity 0.15s ease-out, font-size 0.12s ease-out;
+}
+
+.street.pulse {
+  animation: pulse 0.5s ease;
+}
+@keyframes pulse {
+  0% { stroke-width: 2.6; }
+  50% { stroke-width: 5; }
+  100% { stroke-width: 2.6; }
+}
+
+#sidebar, #challenge-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+#guessInput, #challengeInput {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text);
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  outline: none;
+}
+#guessInput:focus, #challengeInput:focus {
+  border-color: var(--accent);
+}
+#guessInput.shake, #challengeInput.shake {
+  animation: shake 0.35s ease;
+  background: var(--shake-bg);
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.route-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+}
+.route-place {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 8px;
+}
+.route-place span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.route-arrow {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+#challengeStatus {
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 13.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#districtGrid {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+}
+
+.district-cell {
+  background-image: linear-gradient(to right, var(--fill-color, var(--accent)) var(--pct, 0%), var(--cell-empty) var(--pct, 0%));
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  transition: background-image 0.4s ease, opacity 0.3s ease;
+}
+
+.district-cell.empty {
+  opacity: 0.35;
+}
+
+.district-cell .arr-number {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.district-cell .arr-count {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.85);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.district-cell.complete {
+  border-color: var(--fill-color, var(--accent));
+}
+
+#foundList, #challengeFoundList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px;
+}
+
+.found-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 13.5px;
+}
+.found-item:hover {
+  background: var(--accent-soft);
+}
+.found-item .swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.found-item .name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.found-item .arr {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+#foundList:empty::before {
+  content: "Les rues trouvées apparaîtront ici.";
+  color: var(--muted);
+  font-size: 13px;
+  padding: 10px;
+  display: block;
+}
+#challengeFoundList:empty::before {
+  content: "Les rues de votre itinéraire apparaîtront ici.";
+  color: var(--muted);
+  font-size: 13px;
+  padding: 10px;
+  display: block;
+}
+
+/* ---------- end panel (classic mode only — challenge mode ends inline
+   in the sidebar via #challengeStatus, no modal) ---------- */
+
+#endPanel {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 13, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 10;
+}
+
+#endCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#endTitle {
+  margin: 0;
+  font-size: 22px;
+}
+
+#endSubtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+#missedList {
+  overflow-y: auto;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+#missedList h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 12px 0 4px;
+}
+#missedList h3:first-child { margin-top: 0; }
+
+/* ---------- confetti ---------- */
+
+#confettiLayer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -12px;
+  width: 8px;
+  height: 14px;
+  opacity: 0.9;
+  animation-name: confetti-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+  100% { transform: translateY(105vh) rotate(540deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti-piece { animation: none; display: none; }
+}
+
+/* ---------- attribution ---------- */
+
+#attribution {
+  text-align: right;
+  padding: 10px 24px;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 720px) {
+  #app-main {
+    flex-direction: column;
+  }
+  #sidebar, #challenge-sidebar {
+    width: 100%;
+  }
+  #map-wrap {
+    min-height: 320px;
+  }
+  #districtGrid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
