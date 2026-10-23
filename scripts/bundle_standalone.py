@@ -33,17 +33,22 @@ def main():
     paris_streets_js = read("data/paris_streets.js")
     game_js = read("game.js")
 
-    html = html.replace(
-        '<link rel="stylesheet" href="style.css">',
-        "<style>\n" + style_css + "\n</style>",
+    # Matches regardless of a "?v=N" cache-busting suffix on the tag, so
+    # this doesn't need editing every time that version number is bumped.
+    html = re.sub(
+        r'<link rel="stylesheet" href="style\.css(?:\?[^"]*)?">',
+        lambda m: "<style>\n" + style_css + "\n</style>",
+        html,
     )
-    html = html.replace(
-        '<script src="data/paris_streets.js"></script>',
-        "<script>\n" + paris_streets_js + "\n</script>",
+    html = re.sub(
+        r'<script src="data/paris_streets\.js(?:\?[^"]*)?"></script>',
+        lambda m: "<script>\n" + paris_streets_js + "\n</script>",
+        html,
     )
-    html = html.replace(
-        '<script src="game.js"></script>',
-        "<script>\n" + game_js + "\n</script>",
+    html = re.sub(
+        r'<script src="game\.js(?:\?[^"]*)?"></script>',
+        lambda m: "<script>\n" + game_js + "\n</script>",
+        html,
     )
 
     remaining = re.findall(r'<(?:script src|link rel="stylesheet" href)="([^"]+)"', html)

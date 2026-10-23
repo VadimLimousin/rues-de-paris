@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rues de Paris</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
@@ -104,7 +104,11 @@
 
 <div id="confettiLayer" aria-hidden="true"></div>
 
-<script src="data/paris_streets.js"></script>
-<script src="game.js"></script>
+<!-- Bump ?v=N on style.css/game.js/data/paris_streets.js whenever any of
+     them changes — GitHub Pages serves everything with a 10-minute
+     cache-control, so without a version bump a just-pushed fix can sit
+     invisible in a visitor's browser cache for up to 10 minutes. -->
+<script src="data/paris_streets.js?v=2"></script>
+<script src="game.js?v=2"></script>
 </body>
 </html>
