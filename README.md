@@ -139,7 +139,14 @@ match/collision/tier details — it's regenerated on every run.
   entry are geocoded via their Wikidata item, then located against the
   same OpenStreetMap data as everything else.
 - Fame ranking: derived from Wikipedia interlanguage link and backlink
-  counts — a heuristic, not an authoritative measure of renown.
+  counts — a heuristic, not an authoritative measure of renown. A bare
+  street name often isn't its own Wikipedia article (it's frequently a
+  disambiguation page, a redirect, or — rarely — an unrelated and far
+  more famous subject entirely, e.g. "Villa d'Este" is by default the
+  Tivoli garden in Italy, not the minor Paris street of the same name);
+  the pipeline checks the resolved page's categories for "Paris" and
+  retries a "(name) (Paris)" title before trusting any fame signal, to
+  avoid scoring a street against the wrong page.
 - Arrondissement colors 1–14 are the official RATP Métro line colors;
   15–20 are chosen to stay visually distinct from those and from each
   other.

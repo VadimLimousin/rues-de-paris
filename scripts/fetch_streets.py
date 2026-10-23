@@ -851,18 +851,25 @@ def match_candidates_to_osm(candidates, osm_by_name):
 # Stage 3: fame score (Wikipedia langlinks + linkshere), threaded
 # ---------------------------------------------------------------------------
 
-def fetch_fame_signal(title):
-    cache_key = "fame_" + re.sub(r"\W+", "_", title)[:120]
+def _fetch_wiki_page_data(title):
+    """One cached Wikipedia query for a title's langlinks/linkshere/categories.
+    Returns None on a hard fetch failure, else (langlinks, linkshere,
+    is_paris_page, resolved_title). `redirects=1` follows plain redirects
+    automatically (e.g. "Cour de Rome" silently redirects to "Rue de
+    Rome") — resolved_title is that final title, which can itself still be
+    a disambiguation page (see fetch_fame_signal's two-hop fallback)."""
+    cache_key = "fameV3_" + re.sub(r"\W+", "_", title)[:120]
     cache_path = os.path.join(WIKI_CACHE, cache_key + ".json")
     if os.path.exists(cache_path):
         d = json.load(open(cache_path))
     else:
         params = {
-            "action": "query", "format": "json", "prop": "langlinks|linkshere",
+            "action": "query", "format": "json", "prop": "langlinks|linkshere|categories",
             "titles": title, "lllimit": "500", "lhlimit": "500", "lhnamespace": "0",
+            "cllimit": "500", "redirects": "1",
         }
         d = None
-        for attempt in range(3):
+        for attempt in range(5):
             try:
                 r = requests.get(WIKI_API, params=params, headers={"User-Agent": UA}, timeout=20)
                 if r.status_code == 200:
@@ -870,33 +877,97 @@ def fetch_fame_signal(title):
                     break
             except requests.RequestException:
                 pass
-            time.sleep(1.5 * (attempt + 1))
+            time.sleep(2 * (attempt + 1))
         if d is None:
-            return title, 0, 0
+            return None
         json.dump(d, open(cache_path, "w"), ensure_ascii=False)
     try:
         page = next(iter(d["query"]["pages"].values()))
         langlinks = len(page.get("langlinks", []))
         linkshere = len(page.get("linkshere", []))
+        categories = [c["title"] for c in page.get("categories", [])]
+        resolved_title = page.get("title", title)
     except (KeyError, StopIteration):
-        langlinks, linkshere = 0, 0
-    return title, langlinks, linkshere
+        langlinks, linkshere, categories, resolved_title = 0, 0, [], title
+    is_paris_page = any("paris" in c.lower() for c in categories)
+    return langlinks, linkshere, is_paris_page, resolved_title
 
 
-def compute_fame_scores(titles):
+def fetch_fame_signal(title):
+    # Also fetches the page's own categories, so compute_fame_scores can tell
+    # whether this title actually resolved to a Paris street's article. Three
+    # confirmed failure modes when it doesn't, tried in order:
+    #   - a bare street name is often a disambiguation page or a plain
+    #     redirect on French Wikipedia, since the name is common enough to
+    #     exist in several French-speaking cities (e.g. "Rue Saint-Denis"
+    #     lists Paris/Montréal/Nantes/Liège versions; the real Paris article
+    #     lives at "Rue Saint-Denis (Paris)") — try the ORIGINAL title's
+    #     "(Paris)" variant first, since that's the overwhelmingly common
+    #     pattern (it works even when the bare title redirects somewhere
+    #     unhelpful, e.g. "Avenue Foch" redirects to a generic cross-France
+    #     "list of streets honoring Foch" page that has no "(Paris)" variant
+    #     of its own — "Avenue Foch (Paris)" is still the right guess).
+    #   - occasionally the redirect lands on ANOTHER disambiguation page
+    #     instead (e.g. "Cour de Rome" redirects to "Rue de Rome", itself a
+    #     disambiguation page — the real article is "Rue de Rome (Paris)",
+    #     not "Cour de Rome (Paris)") — only tried if the first guess fails.
+    #   - the bare title is, on French Wikipedia, an entirely unrelated and
+    #     far more famous subject (e.g. "Villa d'Este" is the Tivoli garden
+    #     in Italy, not the minor Paris street of the same name) — naively
+    #     scoring it gave that street a UNESCO World Heritage Site's
+    #     langlinks/backlinks count. Not recoverable by either "(Paris)"
+    #     guess, so falls back to a fame score of 0 (tier 4) rather than
+    #     trusting any of the wrong pages' numbers.
+    result = _fetch_wiki_page_data(title)
+    if result is None:
+        return title, 0, 0, False
+    langlinks, linkshere, is_paris_page, resolved_title = result
+    if not is_paris_page:
+        candidates = []
+        if not title.endswith("(Paris)"):
+            candidates.append(title + " (Paris)")
+        if resolved_title != title and not resolved_title.endswith("(Paris)"):
+            candidates.append(resolved_title + " (Paris)")
+        for candidate in candidates:
+            fallback = _fetch_wiki_page_data(candidate)
+            if fallback is not None and fallback[2]:
+                return title, fallback[0], fallback[1], True
+    return title, langlinks, linkshere, is_paris_page
+
+
+def compute_fame_scores(titles, synthetic_titles=frozenset()):
     report("\n=== Stage 3: fame scoring (Wikipedia langlinks + backlinks) ===")
     scores = {}
+    mismatches = []
     t0 = time.time()
-    with ThreadPoolExecutor(max_workers=8) as pool:
+    # Lower than the original 8: each title can now cost up to 2 sequential
+    # requests (the "(Paris)" retry), and 8-way concurrency on top of that
+    # was triggering enough transient failures/rate-limiting under
+    # sustained load to misclassify hundreds of genuinely famous streets
+    # as unrecoverable title collisions.
+    with ThreadPoolExecutor(max_workers=4) as pool:
         futures = [pool.submit(fetch_fame_signal, t) for t in titles]
         done = 0
         for fut in as_completed(futures):
-            title, langlinks, linkshere = fut.result()
-            scores[title] = langlinks * 10 + linkshere
+            title, langlinks, linkshere, is_paris_page = fut.result()
+            # Synthetic landmarks (Tour Eiffel, Gare de Lyon...) are resolved
+            # via an exact Wikidata QID, not a bare-title lookup, so their
+            # real article is correct even though it's a monument/station/
+            # park page with no "Paris" category of its own — only the
+            # title-lookup path (every other street) needs this sanity check.
+            if not is_paris_page and title not in synthetic_titles:
+                scores[title] = 0
+                mismatches.append(title)
+            else:
+                scores[title] = langlinks * 10 + linkshere
             done += 1
             if done % 500 == 0:
                 report(f"  fame-scored {done}/{len(titles)}")
     report(f"Fame scoring done in {round(time.time()-t0,1)}s")
+    if mismatches:
+        report(f"Title collisions with an unrelated (non-Paris) Wikipedia page — "
+               f"forced to tier 4 instead of trusting the wrong page's fame signal "
+               f"({len(mismatches)}): {', '.join(sorted(mismatches))}")
     return scores
 
 
@@ -1184,7 +1255,7 @@ def main():
     park_groups = fetch_park_rings(paris_polygon)
 
     titles = list(matched.keys())
-    scores = compute_fame_scores(titles)
+    scores = compute_fame_scores(titles, synthetic_titles)
     tiers = assign_tiers(scores)
 
     build_output(matched, tiers, boundary_rings, water_groups, park_groups, synthetic_titles)

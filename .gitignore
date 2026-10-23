@@ -23,3 +23,6 @@ __pycache__/
 
 # Leftover local zip from manual sharing — redundant with the repo itself.
 /R2P.zip
+
+# Claude Code's own local runtime state, not project content.
+/.claude/
