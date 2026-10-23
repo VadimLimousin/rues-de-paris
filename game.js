@@ -100,6 +100,9 @@
     endSubtitle: document.getElementById("endSubtitle"),
     missedList: document.getElementById("missedList"),
     closeEndBtn: document.getElementById("closeEndBtn"),
+    helpBtn: document.getElementById("helpBtn"),
+    introPanel: document.getElementById("introPanel"),
+    closeIntroBtn: document.getElementById("closeIntroBtn"),
   };
 
   var SVG_NS = "http://www.w3.org/2000/svg";
@@ -712,6 +715,23 @@
 
   el.closeEndBtn.addEventListener("click", function () {
     el.endPanel.hidden = true;
+  });
+
+  // ---- First-visit "how to play" intro ----
+
+  var INTRO_SEEN_KEY = "r2p.introSeen";
+
+  function showIntro() {
+    el.introPanel.hidden = false;
+  }
+
+  el.helpBtn.addEventListener("click", showIntro);
+
+  el.closeIntroBtn.addEventListener("click", function () {
+    el.introPanel.hidden = true;
+    try {
+      localStorage.setItem(INTRO_SEEN_KEY, "1");
+    } catch (e) { /* no persistence available; intro just reappears next visit */ }
   });
 
   // ---------------------------------------------------------------------
@@ -1367,4 +1387,12 @@
     resetGame(state.tier);
   }
   refreshChallengeBtnLabel();
+
+  var introAlreadySeen;
+  try {
+    introAlreadySeen = localStorage.getItem(INTRO_SEEN_KEY) === "1";
+  } catch (e) {
+    introAlreadySeen = false;
+  }
+  if (!introAlreadySeen) showIntro();
 })();

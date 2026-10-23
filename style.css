@@ -130,6 +130,14 @@ body {
   color: var(--accent);
 }
 
+#helpBtn {
+  width: 34px;
+  padding: 8px 0;
+  text-align: center;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
 #challengeBtn.solved {
   background: var(--accent);
   border-color: var(--accent);
@@ -485,7 +493,7 @@ body {
 /* ---------- end panel (classic mode only — challenge mode ends inline
    in the sidebar via #challengeStatus, no modal) ---------- */
 
-#endPanel {
+#endPanel, #introPanel {
   position: fixed;
   inset: 0;
   background: rgba(10, 15, 13, 0.5);
@@ -496,7 +504,7 @@ body {
   z-index: 10;
 }
 
-#endCard {
+#endCard, #introCard {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -509,7 +517,7 @@ body {
   gap: 12px;
 }
 
-#endTitle {
+#endTitle, #introCard h2 {
   margin: 0;
   font-size: 22px;
 }
@@ -535,6 +543,24 @@ body {
   margin: 12px 0 4px;
 }
 #missedList h3:first-child { margin-top: 0; }
+
+#introCard ol {
+  margin: 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+#introBonus {
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--accent-soft);
+  border-radius: 10px;
+  font-size: 14px;
+}
 
 /* ---------- confetti ---------- */
 

@@ -138,6 +138,14 @@ body {
   color: var(--accent);
 }
 
+#helpBtn {
+  width: 34px;
+  padding: 8px 0;
+  text-align: center;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
 #challengeBtn.solved {
   background: var(--accent);
   border-color: var(--accent);
@@ -493,7 +501,7 @@ body {
 /* ---------- end panel (classic mode only — challenge mode ends inline
    in the sidebar via #challengeStatus, no modal) ---------- */
 
-#endPanel {
+#endPanel, #introPanel {
   position: fixed;
   inset: 0;
   background: rgba(10, 15, 13, 0.5);
@@ -504,7 +512,7 @@ body {
   z-index: 10;
 }
 
-#endCard {
+#endCard, #introCard {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -517,7 +525,7 @@ body {
   gap: 12px;
 }
 
-#endTitle {
+#endTitle, #introCard h2 {
   margin: 0;
   font-size: 22px;
 }
@@ -543,6 +551,24 @@ body {
   margin: 12px 0 4px;
 }
 #missedList h3:first-child { margin-top: 0; }
+
+#introCard ol {
+  margin: 0;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+#introBonus {
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--accent-soft);
+  border-radius: 10px;
+  font-size: 14px;
+}
 
 /* ---------- confetti ---------- */
 
@@ -631,6 +657,7 @@ body {
     </div>
     <button id="challengeBtn" class="btn-secondary">Défi du jour</button>
     <button id="giveupBtn" class="btn-secondary">Abandonner</button>
+    <button id="helpBtn" class="btn-secondary" title="Comment jouer ?" aria-label="Comment jouer ?">?</button>
   </div>
 </header>
 
@@ -682,6 +709,19 @@ body {
     <p id="endSubtitle"></p>
     <div id="missedList"></div>
     <button id="closeEndBtn" class="btn-secondary">Fermer</button>
+  </div>
+</div>
+
+<div id="introPanel" hidden>
+  <div id="introCard">
+    <h2>Comment jouer ?</h2>
+    <ol>
+      <li>Choisissez une difficulté.</li>
+      <li>Nommez toutes les rues affichées en gris sur la carte.</li>
+      <li>Passez à la difficulté supérieure si le niveau actuel est trop facile.</li>
+    </ol>
+    <p id="introBonus">Bonus : tentez le Défi du jour si vous êtes incollable !</p>
+    <button id="closeIntroBtn" class="btn-secondary">Compris, j'y vais !</button>
   </div>
 </div>
 
@@ -801,6 +841,9 @@ window.PARIS_PLACES = [{"id": "place-vendome", "displayName": "Place Vendôme", 
     endSubtitle: document.getElementById("endSubtitle"),
     missedList: document.getElementById("missedList"),
     closeEndBtn: document.getElementById("closeEndBtn"),
+    helpBtn: document.getElementById("helpBtn"),
+    introPanel: document.getElementById("introPanel"),
+    closeIntroBtn: document.getElementById("closeIntroBtn"),
   };
 
   var SVG_NS = "http://www.w3.org/2000/svg";
@@ -1413,6 +1456,23 @@ window.PARIS_PLACES = [{"id": "place-vendome", "displayName": "Place Vendôme", 
 
   el.closeEndBtn.addEventListener("click", function () {
     el.endPanel.hidden = true;
+  });
+
+  // ---- First-visit "how to play" intro ----
+
+  var INTRO_SEEN_KEY = "r2p.introSeen";
+
+  function showIntro() {
+    el.introPanel.hidden = false;
+  }
+
+  el.helpBtn.addEventListener("click", showIntro);
+
+  el.closeIntroBtn.addEventListener("click", function () {
+    el.introPanel.hidden = true;
+    try {
+      localStorage.setItem(INTRO_SEEN_KEY, "1");
+    } catch (e) { /* no persistence available; intro just reappears next visit */ }
   });
 
   // ---------------------------------------------------------------------
@@ -2068,6 +2128,14 @@ window.PARIS_PLACES = [{"id": "place-vendome", "displayName": "Place Vendôme", 
     resetGame(state.tier);
   }
   refreshChallengeBtnLabel();
+
+  var introAlreadySeen;
+  try {
+    introAlreadySeen = localStorage.getItem(INTRO_SEEN_KEY) === "1";
+  } catch (e) {
+    introAlreadySeen = false;
+  }
+  if (!introAlreadySeen) showIntro();
 })();
 
 </script>
