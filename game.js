@@ -725,13 +725,19 @@
     el.introPanel.hidden = false;
   }
 
-  el.helpBtn.addEventListener("click", showIntro);
-
-  el.closeIntroBtn.addEventListener("click", function () {
+  function closeIntro() {
     el.introPanel.hidden = true;
     try {
       localStorage.setItem(INTRO_SEEN_KEY, "1");
     } catch (e) { /* no persistence available; intro just reappears next visit */ }
+  }
+
+  el.helpBtn.addEventListener("click", showIntro);
+  el.closeIntroBtn.addEventListener("click", closeIntro);
+
+  // Clicking the dark backdrop (not the card itself) closes it too.
+  el.introPanel.addEventListener("click", function (e) {
+    if (e.target === el.introPanel) closeIntro();
   });
 
   // ---------------------------------------------------------------------
