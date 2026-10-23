@@ -105,28 +105,28 @@ Parks kept (top 25 by area): 25
 Fame scoring done in 0.4s
 Title collisions with an unrelated (non-Paris) Wikipedia page — forced to tier 4 instead of trusting the wrong page's fame signal (3): Avenue Alphand, Avenue de Paris, Rue Allard
 
-Tier cutoffs: tier1<= 50, tier2<= 200, tier3<= 600, tier4 = rest (5226)
-Sample tier 1 (most famous): Tour Eiffel, Avenue des Champs-Élysées, Cimetière du Père-Lachaise, Place de la Concorde, Place Vendôme, Pont Neuf, Place Charles-de-Gaulle, Gare de Lyon, Place des Vosges, Rue de Rivoli, Place de la République, Place de la Bastille, Pont Alexandre III, Parc des Buttes-Chaumont, Rue du Faubourg-Saint-Honoré
+Tier cutoffs (real streets only, 6 synthetic landmarks excluded from these counts): tier1<= 50, tier2<= 200, tier3<= 600, tier4 = rest (5220)
+Sample tier 1 (most famous): Avenue des Champs-Élysées, Place de la Concorde, Place Vendôme, Pont Neuf, Place Charles-de-Gaulle, Place des Vosges, Rue de Rivoli, Place de la République, Place de la Bastille, Pont Alexandre III, Rue du Faubourg-Saint-Honoré, Boulevard Haussmann, Boulevard Saint-Germain, Rue de Vaugirard, Rue Saint-Honoré
 
 === Stage 4: projection, keys, collisions ===
 coreKey collisions detected (marked ambiguous, require full name to match): 564 groups
 
 === Stage 5: street-adjacency graph (Daily Challenge connectivity) ===
 Adjacency from shared coordinates: 5826 nodes, 12086 edges
-  Connected landmark 'tour-eiffel' to nearest streets: avenue-gustave-eiffel, avenue-pierre-loti, avenue-anatole-france
-  Connected landmark 'gare-de-lyon' to nearest streets: place-louis-armand, rue-de-bercy, boulevard-diderot
-  Connected landmark 'square-des-batignolles' to nearest streets: place-charles-fillion, rue-brochant, rue-de-rome
   Connected landmark 'bibliotheque-nationale-de-france-francois-mitterrand' to nearest streets: quai-francois-mauriac, avenue-de-france, rue-alphonse-boudard
+  Connected landmark 'square-des-batignolles' to nearest streets: place-charles-fillion, rue-brochant, rue-de-rome
   Connected landmark 'parc-des-buttes-chaumont' to nearest streets: avenue-de-la-cascade, rue-botzaris, rue-hassard
+  Connected landmark 'gare-de-lyon' to nearest streets: place-louis-armand, rue-de-bercy, boulevard-diderot
   Connected landmark 'cimetiere-du-pere-lachaise' to nearest streets: rue-lespagnol, avenue-gambetta, rue-desiree
+  Connected landmark 'tour-eiffel' to nearest streets: avenue-gustave-eiffel, avenue-pierre-loti, avenue-anatole-france
 
 === Stage 6: known-places pool (Daily Challenge) ===
 Places resolved: 20/20
 
 Final street count: 5826
-  tier 1: 50 streets
+  tier 1: 56 streets
   tier 2: 150 streets
   tier 3: 400 streets
-  tier 4: 5226 streets
+  tier 4: 5220 streets
 
 Wrote /Users/vadimlimousin/R2P/scripts/../data/paris_streets.js (4093 KB)

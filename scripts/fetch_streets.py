@@ -971,8 +971,15 @@ def compute_fame_scores(titles, synthetic_titles=frozenset()):
     return scores
 
 
-def assign_tiers(scores):
-    ranked = sorted(scores.keys(), key=lambda t: -scores[t])
+def assign_tiers(scores, synthetic_titles=frozenset()):
+    # Ranked (and the 50/200/600 cutoffs) over REAL streets only — synthetic
+    # landmarks (Tour Eiffel, Gare de Lyon...) are excluded from classic
+    # mode's tier filtering entirely (see game.js's `!s.synthetic` checks),
+    # so letting them consume a cutoff slot was silently shrinking the
+    # actual playable count below the intended 50/200/600 (e.g. Monuments
+    # showed 46 real streets instead of 50, since 4 landmarks took slots).
+    real_titles = [t for t in scores if t not in synthetic_titles]
+    ranked = sorted(real_titles, key=lambda t: -scores[t])
     n = len(ranked)
     cut1 = min(50, n)
     cut2 = min(200, n)
@@ -987,7 +994,15 @@ def assign_tiers(scores):
             tiers[title] = 3
         else:
             tiers[title] = 4
-    report(f"\nTier cutoffs: tier1<= {cut1}, tier2<= {cut2}, tier3<= {cut3}, tier4 = rest ({n - cut3})")
+    # Synthetic landmarks' own tier is cosmetic only (never consulted by
+    # classic mode) — tier 1 reflects that they're all genuinely iconic by
+    # construction, without touching the real-street counts above.
+    for t in synthetic_titles:
+        if t in scores:
+            tiers[t] = 1
+    report(f"\nTier cutoffs (real streets only, {len(synthetic_titles)} synthetic "
+           f"landmarks excluded from these counts): tier1<= {cut1}, tier2<= {cut2}, "
+           f"tier3<= {cut3}, tier4 = rest ({n - cut3})")
     report("Sample tier 1 (most famous): " + ", ".join(ranked[:15]))
     return tiers
 
@@ -1256,7 +1271,7 @@ def main():
 
     titles = list(matched.keys())
     scores = compute_fame_scores(titles, synthetic_titles)
-    tiers = assign_tiers(scores)
+    tiers = assign_tiers(scores, synthetic_titles)
 
     build_output(matched, tiers, boundary_rings, water_groups, park_groups, synthetic_titles)
 
